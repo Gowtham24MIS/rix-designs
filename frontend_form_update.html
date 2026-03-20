@@ -1,0 +1,75 @@
+<!--
+  ════════════════════════════════════════════════════════
+  STEP: Replace the old <script> contact form section
+        in rix_design_solutions.html with this block.
+  
+  After deploying to Render, replace:
+    YOUR_RENDER_URL  →  e.g. https://rix-design-backend.onrender.com
+  ════════════════════════════════════════════════════════
+-->
+
+<script>
+// ── CONFIG: paste your Render URL here after deploying ──────────────────────
+const API_URL = "https://YOUR_RENDER_URL.onrender.com/contact";
+
+// ── Contact form handler ─────────────────────────────────────────────────────
+async function submitContactForm(e) {
+  e.preventDefault();
+
+  const form      = e.target;
+  const btn       = form.querySelector('.form-submit');
+  const successEl = document.getElementById('form-success');
+  const errorEl   = document.getElementById('form-error');
+
+  // Reset UI
+  successEl.style.display = 'none';
+  errorEl.style.display   = 'none';
+
+  // Collect values
+  const name    = form.querySelector('input[type="text"]').value.trim();
+  const email   = form.querySelector('input[type="email"]').value.trim();
+  const message = form.querySelector('textarea').value.trim();
+
+  // Basic validation
+  if (!name || !email || !message) {
+    errorEl.textContent = '⚠ Please fill in all fields before sending.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Loading state
+  btn.disabled    = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch(API_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name, email, message })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      successEl.style.display = 'block';
+      form.reset();
+    } else {
+      throw new Error(data.detail || 'Something went wrong.');
+    }
+  } catch (err) {
+    errorEl.textContent = '✗ ' + (err.message || 'Failed to send. Please try again.');
+    errorEl.style.display = 'block';
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Send Message →';
+  }
+}
+</script>
+
+<!--
+  Also add this error div right below the success div in your HTML contact form:
+
+  <div id="form-error" style="display:none; color:#cc0000; font-size:0.85rem;
+    padding:10px; border:1.5px solid #cc0000; text-align:center; font-weight:500;">
+  </div>
+-->
