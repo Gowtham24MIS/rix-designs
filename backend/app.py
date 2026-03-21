@@ -1,38 +1,24 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_mail import Mail, Message
-from dotenv import load_dotenv
+import requests
 import os
 
-load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-mail = Mail(app)
-
 @app.route('/api/contact', methods=['POST'])
 def contact():
-    print("🔍 RAW FORM DATA:", dict(request.form))  # Shows ALL data
+    print("🔍 RAW FORM DATA:", dict(request.form))
     
-    # ✅ SIMPLIEST - Direct access to form fields
-    name = request.form.get('name') or ''
-    email = request.form.get('email') or ''
-    message = request.form.get('message') or ''
+    # Get form data
+    name = request.form.get('name', '').strip()
+    email = request.form.get('email', '').strip()
+    message = request.form.get('message', '').strip()
     
     print(f"📨 name='{name}' | email='{email}' | message='{message}'")
     
-    # Clean data
-    name = name.strip()
-    email = email.strip()
-    message = message.strip()
-    
-    if not name or not email or not message:
+    # Validate
+    if not all([name, email, message]):
         print("❌ MISSING FIELDS")
         return jsonify({
             'success': False, 
@@ -41,23 +27,46 @@ def contact():
     
     print("✅ ALL FIELDS VALID!")
     
-    # Email sending...
-    recipient = os.getenv('RECIPIENT_EMAIL', 'gowtham.developer07@gmail.com')
-    msg = Message(
-        subject=f'Rix Contact: {name}',
-        sender=app.config['MAIL_USERNAME'],
-        recipients=[recipient],
-        body=f'Name: {name}\nEmail: {email}\n\n{message}'
-    )
+    # RESEND API CALL (FREE 3k emails/month)
+    url = "https://api.resend.com/emails"
+    api_key = os.getenv('RESEND_API_KEY')
+    recipient = os.getenv('RECIPIENT_EMAIL', 'rix.designs02@gmail.com')
+    
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "from": "Rix Designs <no-reply@rix.designs>",
+        "to": [recipient],
+        "subject": f"New Contact Form: {name}",
+        "html": f"""
+        <h2>🎉 New Contact Form Submission</h2>
+        <p><strong>Name:</strong> {name}</p>
+        <p><strong>Email:</strong> {email}</p>
+        <p><strong>Message:</strong></p>
+        <p>{message}</p>
+        <hr>
+        <small>Submitted via rix-designs.vercel.app</small>
+        """
+    }
     
     try:
-        mail.send(msg)
-        print("✅ EMAIL SENT SUCCESSFULLY!")
-        return jsonify({'success': True})
+        response = requests.post(url, headers=headers, json=data)
+        print(f"✅ RESEND RESPONSE: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("✅ EMAIL SENT SUCCESSFULLY!")
+            return jsonify({'success': True, 'message': 'Thank you! Your message has been sent.'})
+        else:
+            print(f"❌ RESEND ERROR: {response.text}")
+            return jsonify({'success': False, 'error': f'Resend error: {response.text}'}), 500
+            
     except Exception as e:
-        print("❌ EMAIL ERROR:", str(e))
+        print(f"❌ REQUEST ERROR: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
-
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
