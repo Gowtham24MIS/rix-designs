@@ -26,58 +26,38 @@ def contact():
         }), 400
     
     print("✅ ALL FIELDS VALID!")
-
-# 🔥 ADD THESE 2 LINES:
-    print(f"🔑 BREVO KEY LOADED: {'YES' if os.getenv('BREVO_API_KEY') else 'NO - MISSING!'}")
-    print(f"🔑 KEY STARTS WITH: {os.getenv('BREVO_API_KEY', '***NOT FOUND***')[:10] if os.getenv('BREVO_API_KEY') else '***NOT FOUND***'}")
     
-    # 🔥 BREVO API CALL (300 emails/DAY FREE)
-    url = "https://api.brevo.com/v3/smtp/email"
-    api_key = os.getenv('BREVO_API_KEY')  # ← NEW ENV VAR
-    
-    if not api_key:
-        print("❌ BREVO_API_KEY missing!")
-        return jsonify({'success': False, 'error': 'Brevo API key missing'}), 500
-    
-    headers = {
-        "accept": "application/json",
-        "api-key": api_key,
-        "content-type": "application/json"
-    }
+    # 🔥 EMAILJS API (ANY sender email WORKS!)
+    url = "https://api.emailjs.com/api/v1.0/email/send"
     
     data = {
-        "sender": {
-            "name": f"{name} via Rix Designs",
-            "email": email  # ✅ User's Gmail works!
-        },
-        "to": [{"email": "rix.designs02@gmail.com", "name": "Gowtham"}],
-        "subject": f"New Contact Form: {name}",
-        "htmlContent": f"""
-        <h2>🎉 New Contact Form Submission</h2>
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>Message:</strong></p>
-        <p>{message}</p>
-        <hr>
-        <small>Submitted via rix-designs.onrender.com</small>
-        """
+        "service_id": os.getenv('EMAILJS_SERVICE_ID'),        # service_abc123
+        "template_id": os.getenv('EMAILJS_TEMPLATE_ID'),      # template_xyz789
+        "public_key": os.getenv('EMAILJS_PUBLIC_KEY'),        # abc123def456
+        "template_params": {
+            "name": name,
+            "user_email": email,     # pmgowtham2007@gmail.com ✓
+            "message": message,
+            "to_email": "rix.designs02@gmail.com"
+        }
     }
     
     try:
-        print("🚀 Sending to Brevo...")
-        response = requests.post(url, headers=headers, json=data)
-        print(f"✅ BREVO RESPONSE: {response.status_code}")
+        print("🚀 Sending to EmailJS...")
+        response = requests.post(url, json=data)
+        print(f"✅ EMAILJS RESPONSE: {response.status_code}")
         
-        if response.status_code in [200, 201]:
+        if response.status_code == 200:
             print("✅ EMAIL SENT SUCCESSFULLY!")
             return jsonify({'success': True, 'message': 'Thank you! Your message has been sent.'})
         else:
-            print(f"❌ BREVO ERROR: {response.text}")
-            return jsonify({'success': False, 'error': f'Brevo error: {response.text}'}), 500
+            print(f"❌ EMAILJS ERROR: {response.text}")
+            return jsonify({'success': False, 'error': f'EmailJS error: {response.text}'}), 500
             
     except Exception as e:
         print(f"❌ REQUEST ERROR: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
