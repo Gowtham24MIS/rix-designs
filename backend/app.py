@@ -38,7 +38,7 @@ def contact():
     }
     
     data = {
-        "from": "Rix Designs <no-reply@rix.designs>",
+        "from": "rix.designs02@gmail.com", 
         "to": [recipient],
         "subject": f"New Contact Form: {name}",
         "html": f"""
