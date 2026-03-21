@@ -27,10 +27,13 @@ def contact():
     
     print("✅ ALL FIELDS VALID!")
     
-    # RESEND API CALL (FREE 3k emails/month)
-        # BREVO API CALL (300 emails/DAY FREE)
+    # 🔥 BREVO API CALL (300 emails/DAY FREE)
     url = "https://api.brevo.com/v3/smtp/email"
-    api_key = os.getenv('BREVO_API_KEY')
+    api_key = os.getenv('BREVO_API_KEY')  # ← NEW ENV VAR
+    
+    if not api_key:
+        print("❌ BREVO_API_KEY missing!")
+        return jsonify({'success': False, 'error': 'Brevo API key missing'}), 500
     
     headers = {
         "accept": "application/json",
@@ -41,9 +44,9 @@ def contact():
     data = {
         "sender": {
             "name": f"{name} via Rix Designs",
-            "email": email  # User's Gmail OK!
+            "email": email  # ✅ User's Gmail works!
         },
-        "to": [{"email": "rix.designs02@gmail.com", "name": "Gowtham"}],  # No yellow!
+        "to": [{"email": "rix.designs02@gmail.com", "name": "Gowtham"}],
         "subject": f"New Contact Form: {name}",
         "htmlContent": f"""
         <h2>🎉 New Contact Form Submission</h2>
@@ -55,18 +58,18 @@ def contact():
         <small>Submitted via rix-designs.onrender.com</small>
         """
     }
-
     
     try:
+        print("🚀 Sending to Brevo...")
         response = requests.post(url, headers=headers, json=data)
-        print(f"✅ RESEND RESPONSE: {response.status_code}")
+        print(f"✅ BREVO RESPONSE: {response.status_code}")
         
-        if response.status_code == 200:
+        if response.status_code in [200, 201]:
             print("✅ EMAIL SENT SUCCESSFULLY!")
             return jsonify({'success': True, 'message': 'Thank you! Your message has been sent.'})
         else:
-            print(f"❌ RESEND ERROR: {response.text}")
-            return jsonify({'success': False, 'error': f'Resend error: {response.text}'}), 500
+            print(f"❌ BREVO ERROR: {response.text}")
+            return jsonify({'success': False, 'error': f'Brevo error: {response.text}'}), 500
             
     except Exception as e:
         print(f"❌ REQUEST ERROR: {str(e)}")
