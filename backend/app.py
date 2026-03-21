@@ -39,7 +39,7 @@ def contact():
     data = {
         "service_id": os.getenv('EMAILJS_SERVICE_ID'),        # service_abc123
         "template_id": os.getenv('EMAILJS_TEMPLATE_ID'),      # template_xyz789
-        "public_key": os.getenv('EMAILJS_PUBLIC_KEY'),        # abc123def456
+        "user_id": os.getenv('EMAILJS_PUBLIC_KEY'),       # abc123def456
         "template_params": {
             "name": name,
             "user_email": email,     # pmgowtham2007@gmail.com ✓
