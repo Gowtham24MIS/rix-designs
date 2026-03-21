@@ -26,6 +26,10 @@ def contact():
         }), 400
     
     print("✅ ALL FIELDS VALID!")
+
+# 🔥 ADD THESE 2 LINES:
+    print(f"🔑 BREVO KEY LOADED: {'YES' if os.getenv('BREVO_API_KEY') else 'NO - MISSING!'}")
+    print(f"🔑 KEY STARTS WITH: {os.getenv('BREVO_API_KEY', '***NOT FOUND***')[:10] if os.getenv('BREVO_API_KEY') else '***NOT FOUND***'}")
     
     # 🔥 BREVO API CALL (300 emails/DAY FREE)
     url = "https://api.brevo.com/v3/smtp/email"
