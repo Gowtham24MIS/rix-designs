@@ -28,29 +28,34 @@ def contact():
     print("✅ ALL FIELDS VALID!")
     
     # RESEND API CALL (FREE 3k emails/month)
-    url = "https://api.resend.com/emails"
-    api_key = os.getenv('RESEND_API_KEY')
-    recipient = os.getenv('RECIPIENT_EMAIL', 'rix.designs02@gmail.com')
+        # BREVO API CALL (300 emails/DAY FREE)
+    url = "https://api.brevo.com/v3/smtp/email"
+    api_key = os.getenv('BREVO_API_KEY')
     
     headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
     }
     
     data = {
-        "from": "rix.designs02@gmail.com", 
-        "to": [recipient],
+        "sender": {
+            "name": f"{name} via Rix Designs",
+            "email": email  # User's Gmail OK!
+        },
+        "to": [{"email": "rix.designs02@gmail.com", "name": "Gowtham"}],  # No yellow!
         "subject": f"New Contact Form: {name}",
-        "html": f"""
+        "htmlContent": f"""
         <h2>🎉 New Contact Form Submission</h2>
         <p><strong>Name:</strong> {name}</p>
         <p><strong>Email:</strong> {email}</p>
         <p><strong>Message:</strong></p>
         <p>{message}</p>
         <hr>
-        <small>Submitted via rix-designs.vercel.app</small>
+        <small>Submitted via rix-designs.onrender.com</small>
         """
     }
+
     
     try:
         response = requests.post(url, headers=headers, json=data)
