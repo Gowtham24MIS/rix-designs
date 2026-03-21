@@ -26,6 +26,12 @@ def contact():
         }), 400
     
     print("✅ ALL FIELDS VALID!")
+
+# 🔥 DEBUG - ADD THESE 3 LINES:
+    print(f"🔑 EMAILJS_SERVICE_ID: {os.getenv('EMAILJS_SERVICE_ID', '***MISSING***')[:10]}...")
+    print(f"🔑 EMAILJS_TEMPLATE_ID: {os.getenv('EMAILJS_TEMPLATE_ID', '***MISSING***')[:10]}...")
+    print(f"🔑 EMAILJS_PUBLIC_KEY: {os.getenv('EMAILJS_PUBLIC_KEY', '***MISSING***')[:10] if os.getenv('EMAILJS_PUBLIC_KEY') else '***MISSING***'}...")
+
     
     # 🔥 EMAILJS API (ANY sender email WORKS!)
     url = "https://api.emailjs.com/api/v1.0/email/send"
