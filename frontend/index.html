@@ -848,24 +848,26 @@ footer {
       </div>
     </div>
     <div class="fade-in">
-      <form class="contact-form" onsubmit="submitContactForm(event)">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" placeholder="Your name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" placeholder="your@email.com" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tell Us About Your Project</label>
-          <textarea class="form-textarea" placeholder="Describe your business and what you need..." required></textarea>
-        </div>
-        <button type="submit" class="form-submit">Send Message →</button>
-        <div id="form-success" style="display:none; color: #333; font-size: 0.85rem; padding: 10px; border: 1.5px solid #333; text-align: center; font-weight: 500;">
-          ✓ Thank you! We'll get back to you within 24 hours.
-        </div>
-      </form>
+    <form class="contact-form" onsubmit="submitContactForm(event)">
+    <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="name" class="form-input" placeholder="Your name" required>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Tell Us About Your Project</label>
+        <textarea name="message" class="form-textarea" placeholder="Describe your business..." required></textarea>
+    </div>
+    <button type="submit" class="form-submit">Send Message →</button>
+    <div id="form-success" style="display:none; color: #333; font-size: 0.85rem; padding: 10px; border: 1.5px solid #333; text-align: center; font-weight: 500;">
+        ✓ Thank you! We'll get back to you within 24 hours.
+    </div>
+</form>
+
+
     </div>
   </div>
 </section>
@@ -928,11 +930,60 @@ function escapeHtml(s) {
 }
 
 // Contact form
-function submitContactForm(e) {
-  e.preventDefault();
-  document.getElementById('form-success').style.display = 'block';
-  e.target.reset();
+async function submitContactForm(event) {
+    event.preventDefault();
+    
+    // 🔥 SAFEST: Get ALL inputs by name using document scope
+    const nameInput = document.querySelector('input[name="name"]');
+    const emailInput = document.querySelector('input[name="email"]');
+    const messageInput = document.querySelector('textarea[name="message"]');
+    
+    // ✅ Check if found
+    if (!nameInput || !emailInput || !messageInput) {
+        alert('Form inputs not found! Check name attributes.');
+        console.log('Found:', {nameInput, emailInput, messageInput});
+        return;
+    }
+    
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
+    
+    console.log("📦 SENDING:", {name, email, message});
+    
+    if (!name || !email || !message) {
+        alert('Please fill all fields');
+        return;
+    }
+    
+    // ✅ PERFECT for your Flask request.form
+    const formData = `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&message=${encodeURIComponent(message)}`;
+    
+    try {
+        const response = await fetch('http://localhost:5000/api/contact', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: formData
+        });
+        
+        const result = await response.json();
+        console.log("✅ RESPONSE:", result);
+        
+        if (result.success) {
+            document.getElementById('form-success').style.display = 'block';
+            // Clear inputs
+            nameInput.value = emailInput.value = messageInput.value = '';
+        } else {
+            alert('Error: ' + result.error);
+        }
+    } catch (error) {
+        console.error('💥 ERROR:', error);
+        alert('Connection failed');
+    }
 }
+
+
+
 </script>
 </body>
 </html>
