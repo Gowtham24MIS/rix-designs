@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="images/favicon.png" type="image/png">
 <title>Rix Design Solutions — We Build Websites That Grow Your Business</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -513,13 +514,21 @@ footer {
   text-decoration: none; padding-bottom: 1rem;
   border-bottom: 1px solid var(--gray-200);
 }
+
+.logo{
+  border: none;
+  border-radius: 50%;
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">Rix<span>|</span>Designs</a>
+  <div class="nav-logo">
+  <img src="images/favicon.png" class="" alt="Rix Designs Logo" width="40" height="40" style="border-radius: 100%;">
+  <a href="#" class="nav-logo" style="position: relative; bottom: 10px;">Rix<span>|</span>Designs</a>
+  </div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
