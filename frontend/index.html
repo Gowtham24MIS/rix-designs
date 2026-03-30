@@ -282,10 +282,13 @@ section { padding: 100px 6vw; }
   transform: translateY(-6px);
 }
 .project-thumb {
-  width: 100%; height: 200px;
-  background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
-  display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 .project-thumb-label {
   font-family: 'Playfair Display', serif;
@@ -658,10 +661,53 @@ footer {
   </div>
   <div class="portfolio-grid" style="margin-top: 3rem;">
 
+
     <!-- Project 1 -->
     <div class="project-card fade-in">
       <div class="project-thumb">
-        <span class="project-thumb-label">Aarthi</span>
+        <img src="images/gym.png" alt="Gym-fitness center" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+      <div class="project-body">
+        <h3>Gym - Fitness Center</h3>
+        <p>A modern, responsive fitness center website designed to engage users and promote workout routines.</p>
+        <a href="https://gym-fitness-indol.vercel.app/" target="_blank">View Project →</a>
+      </div>
+      <div class="comment-section">
+        <h4>Leave a Comment</h4>
+        <div class="comment-form" id="form-1">
+          <input type="text" placeholder="Your name" id="name-1">
+          <textarea rows="2" placeholder="Your thoughts..." id="msg-1"></textarea>
+          <button onclick="submitComment(1)">Post Comment</button>
+        </div>
+        <div class="comments-list" id="comments-1"></div>
+      </div>
+    </div>
+
+        <!-- Project 1 -->
+    <div class="project-card fade-in">
+      <div class="project-thumb">
+        <img src="images/cafe.png" alt="Cafe - smooth website" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+      <div class="project-body">
+        <h3>Cafe - smooth website</h3>
+        <p>A modern smooth website for your cafe shop businnes, makes the customer awesome ! </p>
+        <a href="https://cafe-kohl-seven.vercel.app/" target="_blank">View Project →</a>
+      </div>
+      <div class="comment-section">
+        <h4>Leave a Comment</h4>
+        <div class="comment-form" id="form-1">
+          <input type="text" placeholder="Your name" id="name-1">
+          <textarea rows="2" placeholder="Your thoughts..." id="msg-1"></textarea>
+          <button onclick="submitComment(1)">Post Comment</button>
+        </div>
+        <div class="comments-list" id="comments-1"></div>
+      </div>
+    </div>
+
+    <!-- Project 1 -->
+    <div class="project-card fade-in">
+      <div class="project-thumb">
+        <img src="images/aarthi.png" alt="Aarthi Website" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="project-body">
         <h3>Aarthi Website</h3>
@@ -682,7 +728,7 @@ footer {
     <!-- Project 2 -->
     <div class="project-card fade-in">
       <div class="project-thumb">
-        <span class="project-thumb-label">Reforming</span>
+        <img src="images/indominous.png" alt="Indominous UI" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="project-body">
         <h3>Reforming UI Website</h3>
@@ -703,7 +749,7 @@ footer {
     <!-- Project 3 -->
     <div class="project-card fade-in">
       <div class="project-thumb">
-        <span class="project-thumb-label">Multicuisine <br>Restaurant</span>
+        <img src="images/hotel.png" alt="Multicuisine Restaurant" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="project-body">
         <h3>Restaurant Website</h3>
@@ -724,7 +770,7 @@ footer {
         <!-- Project 3 -->
     <div class="project-card fade-in">
       <div class="project-thumb">
-        <span class="project-thumb-label">Bakery <br>Shop</span>
+        <img src="images/bakery.png" alt="Bakery Shop" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="project-body">
         <h3>Bakery Shop Website</h3>
@@ -745,7 +791,7 @@ footer {
     <!-- Project 4 -->
     <div class="project-card fade-in">
       <div class="project-thumb">
-        <span class="project-thumb-label">Nike UI</span>
+        <img src="images/shoe.png" alt="Show Shop" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="project-body">
         <h3>Nike UI Prototype</h3>
@@ -766,7 +812,7 @@ footer {
     <!-- Project 5 -->
     <div class="project-card fade-in">
       <div class="project-thumb">
-        <span class="project-thumb-label">Fitness</span>
+        <img src="images/fitness.png" alt="Fitness App" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="project-body">
         <h3>Fitness App UI</h3>
